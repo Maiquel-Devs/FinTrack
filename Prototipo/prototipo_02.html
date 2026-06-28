@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>FinTrack - Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #f8f9fa; }
+        .card-header { font-weight: bold; }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                max-width: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container my-5">
+    <header class="text-center mb-5">
+        <h1 class="display-4 text-primary fw-bold">FinTrack</h1>
+        <p class="text-muted">Painel de Controle Financeiro Simplificado</p>
+    </header>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card border-success shadow-sm">
+                <div class="card-header bg-success text-white">Lançar Novo Ativo</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nome do Ativo</label>
+                        <input type="text" id="nomeAtivo" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Valor (R$)</label>
+                        <input type="number" id="valorAtivo" class="form-control">
+                    </div>
+                    <button onclick="adicionar('ativo')" class="btn btn-success w-100">Adicionar Ativo</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card border-danger shadow-sm">
+                <div class="card-header bg-danger text-white">Lançar Nova Despesa</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Descrição da Despesa</label>
+                        <input type="text" id="nomeDespesa" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Valor (R$)</label>
+                        <input type="number" id="valorDespesa" class="form-control">
+                    </div>
+                    <button onclick="adicionar('despesa')" class="btn btn-danger w-100">Adicionar Despesa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5 g-4">
+        <div class="col-12 col-md-6">
+            <div class="mb-4">
+                <h3 class="text-success border-bottom pb-2">Ativos</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped w-100" id="tabelaAtivos">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width: 50%;">Nome</th>
+                                <th style="width: 50%;">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-md-6">
+            <div class="mb-4">
+                <h3 class="text-danger border-bottom pb-2">Despesas</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped w-100" id="tabelaDespesas">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width: 50%;">Descrição</th>
+                                <th style="width: 50%;">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-5 shadow-sm mb-5">
+        <div class="card-header bg-dark text-white text-center">Gráfico Comparativo</div>
+        <div class="card-body">
+            <div class="chart-container">
+                <canvas id="graficoBarras"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div id="insightsContainer">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-secondary text-white text-center">Resumo Inteligente</div>
+            <div class="card-body p-4 text-center d-flex flex-column justify-content-center" style="min-height: 220px;">
+                <p class="text-muted mb-0">Adicione valores para gerar insights financeiros...</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let listaAtivos = [];
+    let listaDespesas = [];
+    let totalAtivos = 0;
+    let totalDespesas = 0;
+    let chart;
+
+    function adicionar(tipo) {
+        if(tipo === 'ativo') {
+            let nome = document.getElementById('nomeAtivo').value || 'Ativo';
+            let valor = parseFloat(document.getElementById('valorAtivo').value) || 0;
+            totalAtivos += valor;
+            listaAtivos.push({ nome: nome, valor: valor });
+            adicionarLinha('tabelaAtivos', nome, valor);
+        } else {
+            let nome = document.getElementById('nomeDespesa').value || 'Despesa';
+            let valor = parseFloat(document.getElementById('valorDespesa').value) || 0;
+            totalDespesas += valor;
+            listaDespesas.push({ nome: nome, valor: valor });
+            adicionarLinha('tabelaDespesas', nome, valor);
+        }
+        atualizarDashboard();
+        
+        if(tipo === 'ativo') {
+            document.getElementById('nomeAtivo').value = '';
+            document.getElementById('valorAtivo').value = '';
+        } else {
+            document.getElementById('nomeDespesa').value = '';
+            document.getElementById('valorDespesa').value = '';
+        }
+    }
+
+    function adicionarLinha(idTabela, nome, valor) {
+        let tbody = document.querySelector(`#${idTabela} tbody`);
+        tbody.innerHTML += `<tr><td>${nome}</td><td>R$ ${valor.toFixed(2)}</td></tr>`;
+    }
+
+    function encontrarMaior(lista) {
+        if (lista.length === 0) return null;
+        return lista.reduce((maior, atual) => (atual.valor > maior.valor) ? atual : maior, lista[0]);
+    }
+
+    function atualizarDashboard() {
+        const ctx = document.getElementById('graficoBarras').getContext('2d');
+        if(chart) chart.destroy();
+        
+        chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Ativos', 'Despesas'],
+                datasets: [{ 
+                    label: 'Valores (R$)',
+                    data: [totalAtivos, totalDespesas], 
+                    backgroundColor: ['#198754', '#dc3545'] 
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        const insightsContainer = document.getElementById('insightsContainer');
+        const pctDespesa = totalAtivos > 0 ? ((totalDespesas / totalAtivos) * 100).toFixed(0) : 0;
+        const vezesMaior = totalDespesas > 0 ? (totalAtivos / totalDespesas).toFixed(1) : totalAtivos.toFixed(1);
+        
+        const maiorAtivo = encontrarMaior(listaAtivos);
+        const maiorDespesa = encontrarMaior(listaDespesas);
+        
+        let txtMaiorAtivo = "Nenhum ativo lançado.";
+        if (maiorAtivo && totalAtivos > 0) {
+            const pctMaxAtivo = ((maiorAtivo.valor / totalAtivos) * 100).toFixed(0);
+            txtMaiorAtivo = `💥 <b>${pctMaxAtivo}%</b> do seu lucro: <b>${maiorAtivo.nome}</b>.`;
+        }
+
+        let txtMaiorDespesa = "Nenhuma despesa lançada.";
+        if (maiorDespesa && totalDespesas > 0) {
+            const pctMaxDespesa = ((maiorDespesa.valor / totalDespesas) * 100).toFixed(0);
+            txtMaiorDespesa = `🚨 <b>${pctMaxDespesa}%</b> das despesas: <b>${maiorDespesa.nome}</b>.`;
+        }
+        
+        // Renderiza com min-height de 220px e Flexbox para centralização vertical
+        insightsContainer.innerHTML = `
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-secondary text-white text-center">Resumo Inteligente</div>
+                <div class="card-body p-4 d-flex flex-column justify-content-center" style="min-height: 220px;">
+                    <div class="row text-center">
+                        <div class="col-md-6 mb-4 mb-md-0">
+                            <h5>Comprometimento</h5>
+                            <h3 class="${pctDespesa > 70 ? 'text-danger' : 'text-success'}">${pctDespesa}%</h3>
+                            <p class="text-muted mb-0">da sua renda está sendo consumida por despesas.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Saldo Disponível</h5>
+                            <h3 class="text-dark">R$ ${(totalAtivos - totalDespesas).toFixed(2)}</h3>
+                            <p class="text-muted mb-0">O que resta após subtrair os gastos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-secondary text-white text-center">Proporção Total</div>
+                <div class="card-body p-4 text-center d-flex flex-column justify-content-center align-items-center" style="min-height: 220px;">
+                    <h3 class="text-primary display-5 fw-bold">${vezesMaior}x</h3>
+                    <p class="text-muted mb-0 mt-2">Seus ativos são ${vezesMaior} vezes maiores que as despesas.</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-5">
+                <div class="card-header bg-secondary text-white text-center">Foco de Concentração</div>
+                <div class="card-body p-4 text-center d-flex flex-column justify-content-center" style="min-height: 220px;">
+                    <p class="mb-4 fs-5">${txtMaiorAtivo}</p>
+                    <p class="mb-0 fs-5">${txtMaiorDespesa}</p>
+                </div>
+            </div>
+        `;
+    }
+</script>
+</body>
+</html>
