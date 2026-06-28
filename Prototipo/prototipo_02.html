@@ -21,6 +21,18 @@
                 max-width: 500px;
             }
         }
+
+        /* Remove as setas de incremento dos inputs numéricos */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
     </style>
 </head>
 <body>
@@ -207,20 +219,19 @@
             txtMaiorDespesa = `🚨 <b>${pctMaxDespesa}%</b> das despesas: <b>${maiorDespesa.nome}</b>.`;
         }
         
-        // Renderiza com min-height de 220px e Flexbox para centralização vertical
         insightsContainer.innerHTML = `
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-header bg-secondary text-white text-center">Resumo Inteligente</div>
                 <div class="card-body p-4 d-flex flex-column justify-content-center" style="min-height: 220px;">
-                    <div class="row text-center">
+                    <div class="row text-center align-items-center">
                         <div class="col-md-6 mb-4 mb-md-0">
                             <h5>Comprometimento</h5>
-                            <h3 class="${pctDespesa > 70 ? 'text-danger' : 'text-success'}">${pctDespesa}%</h3>
+                            <h2 class="${pctDespesa > 70 ? 'text-danger' : 'text-success'} display-4 fw-bold my-2">${pctDespesa}%</h2>
                             <p class="text-muted mb-0">da sua renda está sendo consumida por despesas.</p>
                         </div>
                         <div class="col-md-6">
                             <h5>Saldo Disponível</h5>
-                            <h3 class="text-dark">R$ ${(totalAtivos - totalDespesas).toFixed(2)}</h3>
+                            <h3 class="text-dark display-6 fw-bold my-2">R$ ${(totalAtivos - totalDespesas).toFixed(2)}</h3>
                             <p class="text-muted mb-0">O que resta após subtrair os gastos.</p>
                         </div>
                     </div>
@@ -230,16 +241,16 @@
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-header bg-secondary text-white text-center">Proporção Total</div>
                 <div class="card-body p-4 text-center d-flex flex-column justify-content-center align-items-center" style="min-height: 220px;">
-                    <h3 class="text-primary display-5 fw-bold">${vezesMaior}x</h3>
-                    <p class="text-muted mb-0 mt-2">Seus ativos são ${vezesMaior} vezes maiores que as despesas.</p>
+                    <h1 class="text-primary display-1 fw-bold mb-3">${vezesMaior}x</h1>
+                    <p class="text-muted mb-0 fs-5">Seus ativos são ${vezesMaior} vezes maiores que as despesas.</p>
                 </div>
             </div>
 
             <div class="card shadow-sm border-0 mb-5">
                 <div class="card-header bg-secondary text-white text-center">Foco de Concentração</div>
                 <div class="card-body p-4 text-center d-flex flex-column justify-content-center" style="min-height: 220px;">
-                    <p class="mb-4 fs-5">${txtMaiorAtivo}</p>
-                    <p class="mb-0 fs-5">${txtMaiorDespesa}</p>
+                    <p class="mb-4 fs-4">${txtMaiorAtivo}</p>
+                    <p class="mb-0 fs-4">${txtMaiorDespesa}</p>
                 </div>
             </div>
         `;
