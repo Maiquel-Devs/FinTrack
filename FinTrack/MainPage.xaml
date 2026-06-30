@@ -1,0 +1,105 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:microcharts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+             x:Class="FinTrack.MainPage"
+             BackgroundColor="#f8f9fa">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="25">
+            
+            <VerticalStackLayout Spacing="5" HorizontalOptions="Center" Margin="0,0,0,10">
+                <Label Text="FinTrack" FontSize="38" FontAttributes="Bold" TextColor="#0d6efd" HorizontalOptions="Center"/>
+                <Label Text="Painel de Controle Financeiro" FontSize="16" TextColor="#6c757d" HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+
+            <Border Stroke="#198754" StrokeThickness="1" BackgroundColor="White">
+                <Border.StrokeShape><RoundRectangle CornerRadius="8"/></Border.StrokeShape>
+                <VerticalStackLayout>
+                    <ContentView BackgroundColor="#198754" Padding="15">
+                        <Label Text="Lançar Novo Ativo" TextColor="White" FontAttributes="Bold"/>
+                    </ContentView>
+                    <VerticalStackLayout Padding="15" Spacing="10">
+                        <Entry x:Name="EntradaNomeAtivo" Placeholder="Nome do Ativo" BackgroundColor="White" TextColor="Black"/>
+                        <Entry x:Name="EntradaValorAtivo" Placeholder="Valor (R$)" Keyboard="Numeric" BackgroundColor="White" TextColor="Black"/>
+                        <Button Text="Adicionar Ativo" BackgroundColor="#198754" Clicked="OnAdicionarAtivoClicked" CornerRadius="5"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Stroke="#dc3545" StrokeThickness="1" BackgroundColor="White">
+                <Border.StrokeShape><RoundRectangle CornerRadius="8"/></Border.StrokeShape>
+                <VerticalStackLayout>
+                    <ContentView BackgroundColor="#dc3545" Padding="15">
+                        <Label Text="Lançar Nova Despesa" TextColor="White" FontAttributes="Bold"/>
+                    </ContentView>
+                    <VerticalStackLayout Padding="15" Spacing="10">
+                        <Entry x:Name="EntradaNomeDespesa" Placeholder="Descrição da Despesa" BackgroundColor="White" TextColor="Black"/>
+                        <Entry x:Name="EntradaValorDespesa" Placeholder="Valor (R$)" Keyboard="Numeric" BackgroundColor="White" TextColor="Black"/>
+                        <Button Text="Adicionar Despesa" BackgroundColor="#dc3545" Clicked="OnAdicionarDespesaClicked" CornerRadius="5"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Stroke="#dee2e6" StrokeThickness="1" BackgroundColor="White" HeightRequest="300">
+                <Border.StrokeShape><RoundRectangle CornerRadius="8"/></Border.StrokeShape>
+                <VerticalStackLayout>
+                    <Grid ColumnDefinitions="*,*,Auto" BackgroundColor="#212529" Padding="15">
+                        <Label Grid.Column="0" Text="Nome" TextColor="White" FontAttributes="Bold"/>
+                        <Label Grid.Column="1" Text="Valor" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center"/>
+                        <Label Grid.Column="2" Text="Ação" TextColor="White" FontAttributes="Bold"/>
+                    </Grid>
+                    <CollectionView x:Name="ListaGeral">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="*,*,Auto" Padding="15">
+                                    <Label Grid.Column="0" Text="{Binding Title}" TextColor="Black" VerticalOptions="Center"/>
+                                    <Label Grid.Column="1" Text="{Binding Amount, StringFormat='R$ {0:F2}'}" HorizontalOptions="Center" TextColor="Black" VerticalOptions="Center"/>
+                                    <Button Grid.Column="2" Text="X" BackgroundColor="#dc3545" TextColor="White" WidthRequest="40" HeightRequest="40" CornerRadius="20" CommandParameter="{Binding Id}" Clicked="OnExcluirClicked"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Stroke="#dee2e6" StrokeThickness="1" BackgroundColor="White">
+                <Border.StrokeShape><RoundRectangle CornerRadius="8"/></Border.StrokeShape>
+                <VerticalStackLayout>
+                    <ContentView BackgroundColor="#212529" Padding="15">
+                        <Label Text="Gráfico Comparativo" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    </ContentView>
+                    <ContentView Padding="10" HeightRequest="250">
+                        <microcharts:ChartView x:Name="graficoBarras" />
+                    </ContentView>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Stroke="#dee2e6" StrokeThickness="1" BackgroundColor="White" Margin="0,0,0,30">
+                <Border.StrokeShape><RoundRectangle CornerRadius="8"/></Border.StrokeShape>
+                <VerticalStackLayout>
+                    <ContentView BackgroundColor="#6c757d" Padding="15">
+                        <Label Text="Resumo Inteligente" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    </ContentView>
+                    
+                    <VerticalStackLayout Padding="20" Spacing="20">
+                        <VerticalStackLayout HorizontalOptions="Center">
+                            <Label Text="Saldo Disponível" FontSize="16" TextColor="#212529" HorizontalOptions="Center"/>
+                            <Label x:Name="lblSaldo" Text="R$ 0.00" FontSize="36" FontAttributes="Bold" TextColor="#212529" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout HorizontalOptions="Center">
+                            <Label Text="Comprometimento" FontSize="16" TextColor="#212529" HorizontalOptions="Center"/>
+                            <Label x:Name="lblComprometimento" Text="0%" FontSize="36" FontAttributes="Bold" TextColor="#198754" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                        
+                        <VerticalStackLayout HorizontalOptions="Center">
+                            <Label Text="Proporção Total" FontSize="16" TextColor="#212529" HorizontalOptions="Center"/>
+                            <Label x:Name="lblProporcao" Text="0.0x" FontSize="36" FontAttributes="Bold" TextColor="#0d6efd" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

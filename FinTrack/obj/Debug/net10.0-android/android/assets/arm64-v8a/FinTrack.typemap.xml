@@ -1,0 +1,10 @@
+<api type="debug" assembly-name="FinTrack" mvid="5b46c334bada4f72bef92bca281c537e">
+  <java-to-managed>
+    <entry java-name="crc641064db24cc378225/MainActivity" managed-name="FinTrack.MainActivity, FinTrack" managed-type-token-id="33554441" />
+    <entry java-name="crc641064db24cc378225/MainApplication" managed-name="FinTrack.MainApplication, FinTrack" managed-type-token-id="33554442" />
+  </java-to-managed>
+  <managed-to-java>
+    <entry java-name="crc641064db24cc378225/MainActivity" managed-name="FinTrack.MainActivity, FinTrack" managed-type-token-id="33554441" />
+    <entry java-name="crc641064db24cc378225/MainApplication" managed-name="FinTrack.MainApplication, FinTrack" managed-type-token-id="33554442" />
+  </managed-to-java>
+</api>
