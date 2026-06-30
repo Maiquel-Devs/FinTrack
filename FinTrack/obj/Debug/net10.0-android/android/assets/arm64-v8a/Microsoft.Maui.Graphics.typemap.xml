@@ -1,8 +1,0 @@
-<api type="debug" assembly-name="Microsoft.Maui.Graphics" mvid="e31ed3aa58614a5c8abb646d299c93d1">
-  <java-to-managed>
-    <entry java-name="crc643f2b18b2570eaa5a/PlatformGraphicsView" managed-name="Microsoft.Maui.Graphics.Platform.PlatformGraphicsView, Microsoft.Maui.Graphics" managed-type-token-id="33554552" />
-  </java-to-managed>
-  <managed-to-java>
-    <entry java-name="crc643f2b18b2570eaa5a/PlatformGraphicsView" managed-name="Microsoft.Maui.Graphics.Platform.PlatformGraphicsView, Microsoft.Maui.Graphics" managed-type-token-id="33554552" />
-  </managed-to-java>
-</api>

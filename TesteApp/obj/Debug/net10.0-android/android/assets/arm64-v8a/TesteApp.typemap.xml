@@ -1,0 +1,10 @@
+<api type="debug" assembly-name="TesteApp" mvid="441f43a15a454c82a9b5db5a72d99041">
+  <java-to-managed>
+    <entry java-name="crc649a17ef4e391225d1/MainActivity" managed-name="TesteApp.MainActivity, TesteApp" managed-type-token-id="33554441" />
+    <entry java-name="crc649a17ef4e391225d1/MainApplication" managed-name="TesteApp.MainApplication, TesteApp" managed-type-token-id="33554442" />
+  </java-to-managed>
+  <managed-to-java>
+    <entry java-name="crc649a17ef4e391225d1/MainActivity" managed-name="TesteApp.MainActivity, TesteApp" managed-type-token-id="33554441" />
+    <entry java-name="crc649a17ef4e391225d1/MainApplication" managed-name="TesteApp.MainApplication, TesteApp" managed-type-token-id="33554442" />
+  </managed-to-java>
+</api>
